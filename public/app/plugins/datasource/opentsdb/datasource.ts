@@ -493,6 +493,17 @@ export default class OpenTsDatasource extends DataSourceApi<OpenTsdbQuery, OpenT
     });
   }
 
+  interpolateVariablesInQueries(queries: OpenTsdbQuery[]): OpenTsdbQuery[] {
+    if (!queries.length) {
+      return queries;
+    }
+
+    return queries.map(query => ({
+      ...query,
+      metric: this.templateSrv.replace(query.metric),
+    }));
+  }
+
   convertToTSDBTime(date: any, roundUp: any, timezone: any) {
     if (date === 'now') {
       return null;
